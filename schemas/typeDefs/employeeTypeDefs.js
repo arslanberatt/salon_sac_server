@@ -41,9 +41,10 @@ const employeeTypeDefs = gql`
       salary: Float
       commissionRate: Float
       advanceBalance: Float
+      password: String!
     ): Employee
 
-    updateEmployeeRole(id: ID!, role: String!): Employee
+    updateEmployeeRole(id: ID!, role: String!, password: String!): Employee
   }
 `;
 

@@ -85,7 +85,7 @@ const employeeResolvers = {
 
     updateEmployeeByPatron: async (
       _,
-      { id, salary, commissionRate, advanceBalance },
+      { id, salary, commissionRate, advanceBalance, password },
       { employeeAuth },
     ) => {
       if (!employeeAuth) {
@@ -95,6 +95,12 @@ const employeeResolvers = {
       const requester = await Employee.findById(employeeAuth.id);
       if (!requester || requester.role !== 'patron') {
         throw new Error('Sadece patron yetkilidir.');
+      }
+
+      // 🔥 Şifre kontrolü ekliyoruz
+      const isMatch = await bcrypt.compare(password, requester.password);
+      if (!isMatch) {
+        throw new Error('Şifre yanlış. İşlem yapılamadı.');
       }
 
       const employee = await Employee.findById(id);
@@ -112,7 +118,7 @@ const employeeResolvers = {
       return employee;
     },
 
-    updateEmployeeRole: async (_, { id, role }, { employeeAuth }) => {
+    updateEmployeeRole: async (_, { id, role, password }, { employeeAuth }) => {
       if (!employeeAuth) {
         throw new Error('Yetkisiz işlem.');
       }
@@ -120,6 +126,12 @@ const employeeResolvers = {
       const requester = await Employee.findById(employeeAuth.id);
       if (!requester || requester.role !== 'patron') {
         throw new Error('Sadece patron yetkilidir.');
+      }
+
+      // 🔥 Şifre kontrolü burada da olmalı
+      const isMatch = await bcrypt.compare(password, requester.password);
+      if (!isMatch) {
+        throw new Error('Şifre yanlış. İşlem yapılamadı.');
       }
 
       const employee = await Employee.findById(id);
