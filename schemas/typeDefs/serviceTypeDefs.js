@@ -17,6 +17,7 @@ const serviceTypeDefs = gql`
   type Mutation {
     addService(title: String!, duration: Int!, price: Float!): Service
     deleteService(id: ID!): Service
+    updateServicePrice(id: ID!, price: Float!): Service
   }
 `;
 
