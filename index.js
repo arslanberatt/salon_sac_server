@@ -9,7 +9,6 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const Employee = require('./models/Employee');
 const jwt = require('jsonwebtoken');
 
-// 🔥 Cron ve reset servisini import ediyoruz
 const cron = require('node-cron');
 const { resetEmployeeBalances } = require('./services/resetService');
 
@@ -22,7 +21,6 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
-// 🔥 Ayın 1'inde gece 00:00'da çalışan reset sistemi
 cron.schedule('0 0 1 * *', async () => {
   console.log(
     "🗓 Ayın 1'i geldi! Çalışan maaş ve avans bakiyeleri sıfırlanıyor...",
@@ -30,36 +28,33 @@ cron.schedule('0 0 1 * *', async () => {
   await resetEmployeeBalances();
 });
 
-app.use(
-  '/graphql',
-  graphqlHTTP(async req => {
-    let employeeAuth = null;
+app.use('/graphql', async (req, res, next) => {
+  let employeeAuth = null;
 
-    const authHeader = req.headers.authorization || '';
-    if (authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
+  const authHeader = req.headers.authorization || '';
+  if (authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
 
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const employee = await Employee.findById(decoded.id);
-        if (employee) {
-          employeeAuth = {
-            id: employee.id,
-            role: employee.role,
-          };
-        }
-      } catch (err) {
-        console.log('Token doğrulanamadı:', err.message);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const employee = await Employee.findById(decoded.id);
+      if (employee) {
+        employeeAuth = {
+          id: employee.id,
+          role: employee.role,
+        };
       }
+    } catch (err) {
+      console.log('Token doğrulanamadı:', err.message);
     }
+  }
 
-    return {
-      schema,
-      graphiql: process.env.NODE_ENV === 'development',
-      context: { employeeAuth },
-    };
-  }),
-);
+  graphqlHTTP({
+    schema,
+    graphiql: process.env.NODE_ENV === 'development',
+    context: { employeeAuth },
+  })(req, res, next); // ← Bu şekilde middleware'i çağır
+});
 
 // Server başlat
 const PORT = process.env.PORT || 5000;

@@ -1,6 +1,7 @@
 const AdvanceRequest = require('../../models/AdvanceRequest');
 const SalaryRecord = require('../../models/SalaryRecord');
 const Transaction = require('../../models/Transaction');
+const Employee = require('../../models/Employee'); // 🔥 bu satırı ekle
 
 const advanceRequestResolvers = {
   Query: {
@@ -40,7 +41,6 @@ const advanceRequestResolvers = {
       request.status = 'onaylandi';
       await request.save();
 
-      // Onaylanınca SalaryRecord ve Transaction oluştur
       await SalaryRecord.create({
         employeeId: request.employeeId,
         type: 'avans',
@@ -72,6 +72,12 @@ const advanceRequestResolvers = {
       request.status = 'reddedildi';
       await request.save();
       return request;
+    },
+  },
+
+  AdvanceRequest: {
+    employee: async parent => {
+      return await Employee.findById(parent.employeeId);
     },
   },
 };

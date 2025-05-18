@@ -57,7 +57,11 @@ const employeeResolvers = {
 
       return {
         token,
-        employee,
+        employee: {
+          id: employee.id,
+          name: employee.name,
+          role: employee.role,
+        },
       };
     },
 
@@ -97,7 +101,6 @@ const employeeResolvers = {
         throw new Error('Sadece patron yetkilidir.');
       }
 
-      // 🔥 Şifre kontrolü ekliyoruz
       const isMatch = await bcrypt.compare(password, requester.password);
       if (!isMatch) {
         throw new Error('Şifre yanlış. İşlem yapılamadı.');

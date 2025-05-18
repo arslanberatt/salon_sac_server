@@ -47,7 +47,6 @@ const salaryRecordResolvers = {
       return record;
     },
 
-    // 🔥 YENİ EKLEDİK: AY SONU RESET İŞLEMİ
     resetEmployeeBalances: async (_, __, { employeeAuth }) => {
       if (!employeeAuth || employeeAuth.role !== 'patron') {
         throw new Error('Sadece patron bu işlemi yapabilir.');

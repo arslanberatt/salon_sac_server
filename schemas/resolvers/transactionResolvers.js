@@ -3,10 +3,10 @@ const Transaction = require('../../models/Transaction');
 const transactionResolvers = {
   Query: {
     transactions: async () => {
-      return await Transaction.find();
+      return await Transaction.find().populate('createdBy');
     },
     transaction: async (_, { id }) => {
-      return await Transaction.findById(id);
+      return await Transaction.find().populate('createdBy');
     },
   },
 
@@ -29,6 +29,7 @@ const transactionResolvers = {
 
       return await newTransaction.save();
     },
+
     cancelTransaction: async (_, { id }, { employeeAuth }) => {
       if (!employeeAuth) {
         throw new Error('Yetkisiz işlem.');

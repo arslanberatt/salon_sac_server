@@ -15,7 +15,7 @@ const appointmentTypeDefs = gql`
   }
 
   type Query {
-    appointments: [Appointment] # Otomatik patron/çalışan kontrolü yapılacak
+    appointments: [Appointment]
     appointmentsByStatus(status: String!): [Appointment]
     appointment(id: ID!): Appointment
   }
@@ -30,7 +30,18 @@ const appointmentTypeDefs = gql`
       notes: String
     ): Appointment
 
-    updateAppointmentStatus(id: ID!, status: String!): Appointment
+    updateAppointmentStatus(
+      id: ID!
+      status: String!
+      totalPrice: Float
+    ): Appointment
+
+    updateAppointment(
+      id: ID!
+      startTime: String!
+      endTime: String!
+      notes: String
+    ): Appointment
   }
 `;
 

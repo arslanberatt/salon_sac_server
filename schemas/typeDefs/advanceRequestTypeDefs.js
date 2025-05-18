@@ -4,6 +4,7 @@ const advanceRequestTypeDefs = gql`
   type AdvanceRequest {
     id: ID!
     employeeId: ID!
+    employee: Employee!
     amount: Float!
     reason: String
     status: String!

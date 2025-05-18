@@ -7,9 +7,9 @@ const transactionTypeDefs = gql`
     amount: Float!
     description: String!
     date: String
-    createdBy: ID!
+    createdBy: Employee!
     createdAt: String
-    canceled: Boolean # 🔥 işte bu satırı ekle
+    canceled: Boolean
   }
 
   type Query {
