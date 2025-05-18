@@ -66,7 +66,7 @@ app.use('/graphql', async (req, res, next) => {
 
   graphqlHTTP({
     schema,
-    graphiql: (process.env.NODE_ENV || 'development') === 'development',
+    graphiql: true,
     context: { employeeAuth },
   })(req, res, next);
 });
