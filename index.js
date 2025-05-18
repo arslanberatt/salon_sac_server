@@ -35,6 +35,14 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+  );
+  next();
+});
+
 // 🕐 Her ayın 1'inde çalışan maaş sıfırlama cron job
 cron.schedule('0 0 1 * *', async () => {
   console.log(
@@ -71,8 +79,7 @@ app.use('/graphql', async (req, res, next) => {
   })(req, res, next);
 });
 
-// 🚀 Sunucuyu başlat
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () =>
   console.log(
     `🚀 Server ${PORT} portunda ${process.env.NODE_ENV} modunda çalışıyor...`
