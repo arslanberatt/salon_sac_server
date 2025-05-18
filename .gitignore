@@ -1,0 +1,44 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment Değişkenleri
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+*.log.*
+log/
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Debug
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Build & Temp
+dist/
+build/
+.cache/
+.tmp/
+.railway/
+
+# OS sistem dosyaları
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Git dosyaları
+.git/
