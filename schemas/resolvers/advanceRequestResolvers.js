@@ -1,7 +1,7 @@
 const AdvanceRequest = require('../../models/AdvanceRequest');
 const SalaryRecord = require('../../models/SalaryRecord');
 const Transaction = require('../../models/Transaction');
-const Employee = require('../../models/Employee'); // 🔥 bu satırı ekle
+const Employee = require('../../models/Employee');
 
 const advanceRequestResolvers = {
   Query: {

@@ -57,10 +57,44 @@ const appointmentResolvers = {
         0,
       );
 
-      const startDateTime = new Date(startTime); // UTC
+      const startDateTime = new Date(startTime);
       const endDateTime = new Date(
         startDateTime.getTime() + totalDurationMinutes * 60000,
       );
+
+      // 🔍 Çalışan randevu çakışma kontrolü
+      const existingEmployeeConflict = await Appointment.findOne({
+        employeeId,
+        status: 'bekliyor',
+        $or: [
+          {
+            startTime: { $lt: endDateTime },
+            endTime: { $gt: startDateTime },
+          },
+        ],
+      });
+
+      if (existingEmployeeConflict) {
+        throw new Error(
+          'Bu çalışanın belirtilen saatte başka bir randevusu var.',
+        );
+      }
+
+      // 🔍 Müşteri aynı gün randevu kontrolü
+      const sameDayStart = new Date(startDateTime);
+      sameDayStart.setHours(0, 0, 0, 0);
+
+      const sameDayEnd = new Date(startDateTime);
+      sameDayEnd.setHours(23, 59, 59, 999);
+
+      const customerSameDayAppointment = await Appointment.findOne({
+        customerId,
+        startTime: { $gte: sameDayStart, $lte: sameDayEnd },
+      });
+
+      if (customerSameDayAppointment) {
+        throw new Error('Bu müşteriye o gün zaten bir randevu alınmış.');
+      }
 
       const newAppointment = new Appointment({
         customerId,
@@ -92,11 +126,9 @@ const appointmentResolvers = {
         throw new Error('Bu randevuyu güncellemeye yetkiniz yok.');
       }
 
-      // 🔄 StartTime güncelleme
       if (startTime) {
         const newStart = new Date(startTime);
 
-        // 🔁 Güncel hizmetleri bul ve total süre hesapla
         const services = await Service.find({
           _id: { $in: appointment.serviceIds },
         });
