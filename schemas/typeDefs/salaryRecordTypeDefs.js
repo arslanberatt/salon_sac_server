@@ -25,7 +25,7 @@ const salaryRecordTypeDefs = gql`
       description: String!
     ): SalaryRecord
     approveSalaryRecord(id: ID!): SalaryRecord
-    resetEmployeeBalances: String # 🔥 yeni eklenen mutation
+    #resetEmployeeBalances: String # 🔥 yeni eklenen mutation
   }
 `;
 
