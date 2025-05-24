@@ -1,5 +1,5 @@
 const SalaryRecord = require('../../models/SalaryRecord');
-const Employee = require('../../models/Employee');
+// const Employee = require('../../models/Employee');
 
 const salaryRecordResolvers = {
   Query: {
@@ -47,23 +47,23 @@ const salaryRecordResolvers = {
       return record;
     },
 
-    resetEmployeeBalances: async (_, __, { employeeAuth }) => {
-      if (!employeeAuth || employeeAuth.role !== 'patron') {
-        throw new Error('Sadece patron bu işlemi yapabilir.');
-      }
+    // resetEmployeeBalances: async (_, __, { employeeAuth }) => {
+    //   if (!employeeAuth || employeeAuth.role !== 'patron') {
+    //     throw new Error('Sadece patron bu işlemi yapabilir.');
+    //   }
 
-      await Employee.updateMany(
-        {},
-        {
-          $set: {
-            salary: 0,
-            advanceBalance: 0,
-          },
-        },
-      );
+    //   await Employee.updateMany(
+    //     {},
+    //     {
+    //       $set: {
+    //         salary: 0,
+    //         advanceBalance: 0,
+    //       },
+    //     },
+    //   );
 
-      return 'Tüm çalışanların maaş ve avans bakiyeleri başarıyla sıfırlandı.';
-    },
+    //   return 'Tüm çalışanların maaş ve avans bakiyeleri başarıyla sıfırlandı.';
+    // },
   },
 };
 
