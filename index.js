@@ -11,7 +11,7 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const Employee = require('./models/Employee');
 const jwt = require('jsonwebtoken');
 const cron = require('node-cron');
-const { resetEmployeeBalances } = require('./services/resetService');
+// const { resetEmployeeBalances } = require('./services/resetService');
 
 const app = express();
 
@@ -44,12 +44,12 @@ app.use((req, res, next) => {
 });
 
 // 🕐 Her ayın 1'inde çalışan maaş sıfırlama cron job
-cron.schedule('0 0 1 * *', async () => {
-  console.log(
-    "🗓 Ayın 1'i geldi! Çalışan maaş ve avans bakiyeleri sıfırlanıyor...",
-  );
-  await resetEmployeeBalances();
-});
+// cron.schedule('0 0 1 * *', async () => {
+//   console.log(
+//     "🗓 Ayın 1'i geldi! Çalışan maaş ve avans bakiyeleri sıfırlanıyor...",
+//   );
+//   await resetEmployeeBalances();
+// });
 
 // 🔐 JWT doğrulama ve GraphQL endpoint
 app.use('/graphql', async (req, res, next) => {
