@@ -21,7 +21,7 @@ app.use(helmet());
 app.use(
   rateLimit({
     windowMs: 10 * 60 * 1000, // 10 dakika
-    max: 100, // max 100 istek
+    max: 1000, // max 100 istek
     message: '⚠️ Çok fazla istek gönderdiniz, lütfen sonra tekrar deneyin.',
   }),
 );
