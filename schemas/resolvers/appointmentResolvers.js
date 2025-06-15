@@ -161,6 +161,8 @@ const appointmentResolvers = {
       if (!employeeAuth) throw new Error('Yetkisiz işlem.');
 
       const appointment = await Appointment.findById(id);
+      const employee = await Employee.findById(appointment.employeeId);
+      const employeeName = employee?.name || "Bilinmeyen Çalışan";
       if (!appointment) throw new Error('Randevu bulunamadı.');
 
       if (
@@ -186,7 +188,7 @@ const appointmentResolvers = {
         await Transaction.create({
           type: 'gelir',
           amount: appointment.totalPrice,
-          description: 'Randevu Ödemesi',
+          description: 'Randevu Ödemesi - ${employeeName}',
           createdBy: employeeAuth.id,
         });
 
