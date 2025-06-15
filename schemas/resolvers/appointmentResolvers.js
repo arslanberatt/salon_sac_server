@@ -179,36 +179,33 @@ const appointmentResolvers = {
       appointment.status = status;
 
       if (status === 'tamamlandi') {
-        if (typeof totalPrice === 'number') {
-          appointment.totalPrice = totalPrice;
-        }
+  if (!isNaN(Number(totalPrice))) {
+    appointment.totalPrice = Number(totalPrice);
+  }
 
-        await appointment.save();
+  await appointment.save();
 
-        await Transaction.create({
-          type: 'gelir',
-          amount: appointment.totalPrice,
-          description: 'Randevu Ödemesi - ${employeeName}',
-          createdBy: employeeAuth.id,
-        });
+  await Transaction.create({
+    type: 'gelir',
+    amount: appointment.totalPrice,
+    description: `Randevu Ödemesi - ${employeeName}`,
+    createdBy: employeeAuth.id,
+  });
 
-        const employee = await Employee.findById(appointment.employeeId);
-        if (employee?.commissionRate) {
-          const commissionAmount =
-            appointment.totalPrice * (employee.commissionRate / 100);
+  const employee = await Employee.findById(appointment.employeeId);
+  if (employee?.commissionRate) {
+    const commissionAmount = appointment.totalPrice * (employee.commissionRate / 100);
 
-          //employee.salary = (employee.salary || 0) + commissionAmount;
-          await employee.save();
+    await SalaryRecord.create({
+      employeeId: employee.id,
+      type: 'prim',
+      amount: commissionAmount,
+      description: 'Randevu Primi',
+      approved: true,
+    });
+  }
+}
 
-          await SalaryRecord.create({
-            employeeId: employee.id,
-            type: 'prim',
-            amount: commissionAmount,
-            description: 'Randevu Primi',
-            approved: true,
-          });
-        }
-      }
 
       if (status === 'iptal') {
         await Transaction.updateMany(
