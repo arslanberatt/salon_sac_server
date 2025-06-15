@@ -195,7 +195,7 @@ const appointmentResolvers = {
           const commissionAmount =
             appointment.totalPrice * (employee.commissionRate / 100);
 
-          employee.salary = (employee.salary || 0) + commissionAmount;
+          //employee.salary = (employee.salary || 0) + commissionAmount;
           await employee.save();
 
           await SalaryRecord.create({
